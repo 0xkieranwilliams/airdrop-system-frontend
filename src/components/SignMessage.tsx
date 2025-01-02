@@ -18,10 +18,10 @@ const SignMessage: React.FC<Props> = (props: Props) => {
   const handleSignMessage = async () => {
     setIsLoading(true);
     try {
-      const result = await signMessage(wagmiConfig, { message: signingMessage});
+      const result = await signMessage(wagmiConfig, { message: signingMessage });
       console.log(result)
       setSignature(result!);
-      props.signMessageCallback(String(signature), signingMessage);
+      props.signMessageCallback(String(result), signingMessage);
     } catch (err) {
       console.log(err);
       return;
@@ -29,16 +29,6 @@ const SignMessage: React.FC<Props> = (props: Props) => {
       setIsLoading(false);
     }
   };
-
-  // const handleRecoverAccount = async () => {
-  //   console.log(signingMessage)
-  //   console.log(signature)
-  //   if (signature !== null ){
-  //     const address = await recoverMessageAddress({message: signingMessage, signature })
-  //     setRecoveredAddress(address);
-  //     console.log({address})
-  //   }
-  // }
 
   return (
     <div>

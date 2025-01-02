@@ -43,6 +43,8 @@ const ClaimRewards = () => {
   const [connectedUserHasClaimedRewards, setConnectedUserHasClaimedRewards] = useState<boolean>(false);
   const [connectedUserRewardAmount, setConnectedUserRewardAmount] = useState<number | null>(null);
 
+
+
   useEffect(() => {
     if (account) {
       console.log(account);
@@ -72,13 +74,21 @@ const ClaimRewards = () => {
   }, [userEpochRewardFromContract]);
 
 
-  const postSigAndMessageToServerToCheckEligibility = (
+  const postSigAndMessageToServerToCheckEligibility = async (
     signature: string,
     signingMessage: string,
-  ): void => {
+  ): Promise<any> => {
     console.log({ signature, signingMessage });
 
-    // TODO :: post request to server with signature and signingMessage to recover account from and check eligibility
+    const checkEligibilityResponse: any = await fetch(
+      `http://localhost:3000/check-eligibility?signature=${signature}&signingMessage=${encodeURIComponent(signingMessage)}`);
+    const checkEligibilityResponseBody = await checkEligibilityResponse.json()
+    console.log(checkEligibilityResponseBody)
+    if(checkEligibilityResponseBody.eligible) {
+      setTimeout(() => {
+        refetchEpochRewardFromContract();
+      }, 30000)
+    }
   };
 
   return (
